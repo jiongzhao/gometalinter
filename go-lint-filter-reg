@@ -1,0 +1,6 @@
+.*should be.*
+.*should have comment.*or be unexported.*
+.*use CamelCase.*
+*field .* is unused.*
+.*has json tag but is not exported.*
+.*undec.*

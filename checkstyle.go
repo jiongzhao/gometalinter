@@ -4,6 +4,8 @@ import (
 	"encoding/xml"
 	"fmt"
 
+	"regexp"
+
 	"gopkg.in/alecthomas/kingpin.v3-unstable"
 )
 
@@ -47,6 +49,9 @@ func outputToCheckstyle(issues chan *Issue) int {
 			continue
 		}
 
+		if checkRegex(issue.Message) {
+			continue
+		}
 		lastFile.Errors = append(lastFile.Errors, &checkstyleError{
 			Column:   issue.Col,
 			Line:     issue.Line,
@@ -63,4 +68,15 @@ func outputToCheckstyle(issues chan *Issue) int {
 	kingpin.FatalIfError(err, "")
 	fmt.Printf("%s%s\n", xml.Header, d)
 	return status
+}
+func checkRegex(message string) bool {
+	if len(config.RegexArr) == 0 {
+		return false
+	}
+	for _, str := range config.RegexArr {
+		if flag, _ := regexp.MatchString(str, message); flag {
+			return true
+		}
+	}
+	return false
 }

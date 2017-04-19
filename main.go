@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/user"
@@ -162,6 +164,28 @@ func init() {
 	kingpin.Flag("enable-gc", "Enable GC for linters (useful on large repositories).").BoolVar(&config.EnableGC)
 	kingpin.Flag("aggregate", "Aggregate issues reported by several linters.").BoolVar(&config.Aggregate)
 	kingpin.CommandLine.GetFlag("help").Short('h')
+	kingpin.Flag("result-filter-reg", "Load regex configuration to filter the results from  file.").Action(loadRegex).String()
+}
+func loadRegex(app *kingpin.Application, element *kingpin.ParseElement, ctx *kingpin.ParseContext) error {
+	f, err := os.Open(*element.Value)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	buf := bufio.NewReader(f)
+	for {
+		line, err := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		config.RegexArr = append(config.RegexArr, line)
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+	}
+
+	return err
 }
 
 func loadConfig(app *kingpin.Application, element *kingpin.ParseElement, ctx *kingpin.ParseContext) error {

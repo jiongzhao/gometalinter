@@ -22,36 +22,36 @@ type Config struct { // nolint: aligncheck
 
 	// A map of linter name to message that is displayed. This is useful when linters display text
 	// that is useful only in isolation, such as errcheck which just reports the construct.
-	MessageOverride map[string]string
-	Severity        map[string]string
-	VendoredLinters bool
-	Format          string
-	Fast            bool
-	Install         bool
-	Update          bool
-	Force           bool
-	DownloadOnly    bool
-	Debug           bool
-	Concurrency     int
-	Exclude         []string
-	Include         []string
-	Skip            []string
-	Vendor          bool
-	Cyclo           int
-	LineLength      int
-	MinConfidence   float64
-	MinOccurrences  int
-	MinConstLength  int
-	DuplThreshold   int
-	Sort            []string
-	Test            bool
-	Deadline        time.Duration `json:"-"`
-	Errors          bool
-	JSON            bool
-	Checkstyle      bool
-	EnableGC        bool
-	Aggregate       bool
-
+	MessageOverride    map[string]string
+	Severity           map[string]string
+	VendoredLinters    bool
+	Format             string
+	Fast               bool
+	Install            bool
+	Update             bool
+	Force              bool
+	DownloadOnly       bool
+	Debug              bool
+	Concurrency        int
+	Exclude            []string
+	Include            []string
+	Skip               []string
+	Vendor             bool
+	Cyclo              int
+	LineLength         int
+	MinConfidence      float64
+	MinOccurrences     int
+	MinConstLength     int
+	DuplThreshold      int
+	Sort               []string
+	Test               bool
+	Deadline           time.Duration `json:"-"`
+	Errors             bool
+	JSON               bool
+	Checkstyle         bool
+	EnableGC           bool
+	Aggregate          bool
+	RegexArr           []string
 	DeadlineJSONCrutch string `json:"Deadline"`
 }
 
@@ -184,5 +184,6 @@ var (
 		DuplThreshold:   50,
 		Sort:            []string{"none"},
 		Deadline:        time.Second * 30,
+		RegexArr:        make([]string, 0),
 	}
 )
