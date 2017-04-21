@@ -49,7 +49,7 @@ func outputToCheckstyle(issues chan *Issue) int {
 			continue
 		}
 
-		if checkRegex(issue.Message) {
+		if checkRegex(issue.Message) || checkFileName(issue.Path) {
 			continue
 		}
 		lastFile.Errors = append(lastFile.Errors, &checkstyleError{
@@ -75,6 +75,17 @@ func checkRegex(message string) bool {
 	}
 	for _, str := range config.RegexArr {
 		if flag, _ := regexp.MatchString(str, message); flag {
+			return true
+		}
+	}
+	return false
+}
+func checkFileName(fileName string) bool {
+	if len(config.FileNameReg) == 0 {
+		return false
+	}
+	for _, fileNameReg := range config.FileNameReg {
+		if flag, _ := regexp.MatchString(fileNameReg, fileName); flag {
 			return true
 		}
 	}

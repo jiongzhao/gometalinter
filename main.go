@@ -165,7 +165,30 @@ func init() {
 	kingpin.Flag("aggregate", "Aggregate issues reported by several linters.").BoolVar(&config.Aggregate)
 	kingpin.CommandLine.GetFlag("help").Short('h')
 	kingpin.Flag("result-filter-reg", "Load regex configuration to filter the results from  file.").Action(loadRegex).String()
+	kingpin.Flag("filename-filter-reg", "Load regex configuration to filter the fileNames from the project.").Action(loadFileNameRegex).String()
+
 }
+func loadFileNameRegex(app *kingpin.Application, element *kingpin.ParseElement, ctx *kingpin.ParseContext) error {
+	f, err := os.Open(*element.Value)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	buf := bufio.NewReader(f)
+	for {
+		line, err := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		config.FileNameReg = append(config.FileNameReg, line)
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+	}
+	return err
+}
+
 func loadRegex(app *kingpin.Application, element *kingpin.ParseElement, ctx *kingpin.ParseContext) error {
 	f, err := os.Open(*element.Value)
 	if err != nil {
@@ -184,7 +207,6 @@ func loadRegex(app *kingpin.Application, element *kingpin.ParseElement, ctx *kin
 			return err
 		}
 	}
-
 	return err
 }
 

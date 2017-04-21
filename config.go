@@ -52,6 +52,7 @@ type Config struct { // nolint: aligncheck
 	EnableGC           bool
 	Aggregate          bool
 	RegexArr           []string
+	FileNameReg        []string
 	DeadlineJSONCrutch string `json:"Deadline"`
 }
 
